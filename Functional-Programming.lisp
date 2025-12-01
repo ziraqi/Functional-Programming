@@ -151,12 +151,32 @@
 ;;   (boolean-eval '(and t nil)) => NIL
 ;;   (boolean-eval '(and t (or nil t))) => T
 (defun boolean-eval (exp)
-  ;; TODO: Implement expression evaluator
+  ;; Evaluate a boolean expression recursively
   ;; Base cases: T and NIL evaluate to themselves
   ;; Recursive cases: extract operator and operands, evaluate recursively
-  ;; For NOT: one operand
-  ;; For AND, OR, XOR, IMPLIES, IFF: two operands
-  )
+  (cond
+    ;; Base case: T evaluates to T
+    ((equal exp t) t)
+    ;; Base case: NIL evaluates to NIL
+    ((equal exp nil) nil)
+    ;; NOT operator: recursively evaluate the operand and apply NOT
+    ((equal (car exp) 'not)
+     (not (boolean-eval (second exp))))
+    ;; AND operator: recursively evaluate both operands and apply AND
+    ((equal (car exp) 'and)
+     (and (boolean-eval (second exp)) (boolean-eval (third exp))))
+    ;; OR operator: recursively evaluate both operands and apply OR
+    ((equal (car exp) 'or)
+     (or (boolean-eval (second exp)) (boolean-eval (third exp))))
+    ;; XOR operator: recursively evaluate both operands and apply XOR
+    ((equal (car exp) 'xor)
+     (boolean-xor (boolean-eval (second exp)) (boolean-eval (third exp))))
+    ;; IMPLIES operator: recursively evaluate both operands and apply IMPLIES
+    ((equal (car exp) 'implies)
+     (boolean-implies (boolean-eval (second exp)) (boolean-eval (third exp))))
+    ;; IFF operator: recursively evaluate both operands and apply IFF
+    ((equal (car exp) 'iff)
+     (boolean-iff (boolean-eval (second exp)) (boolean-eval (third exp))))))
 
 ;; Perform merge sort on a list.
 ;; Parameters:
@@ -176,24 +196,34 @@
 ;;   (merge-sort '(2 1 5 0) #'<) => '(0 1 2 5)
 ;;   (merge-sort '(2 1 5 0) #'>) => '(5 2 1 0)
 (defun merge-sort (list predicate)
-  ;; TODO: Implement merge sort
-  ;; Use LABELS to define:
-  ;;   (split-list lst) - returns two lists
-  ;;   (merge-lists left right) - merges two sorted lists
-  ;; 
-  ;; Structure:
-  ;; (labels ((split-list (lst) ...)
-  ;;          (merge-lists (left right) ...))
-  ;;   (cond
-  ;;     ((not list) nil)
-  ;;     ((not (cdr list)) list)
-  ;;     (t (let* ((halves (split-list list))
-  ;;               (left-half (car halves))
-  ;;               (right-half (second halves))
-  ;;               (sorted-left (merge-sort left-half predicate))
-  ;;               (sorted-right (merge-sort right-half predicate)))
-  ;;          (merge-lists sorted-left sorted-right)))))
-  )
+  ;; Merge sort implementation using divide-and-conquer
+  (labels ((split-list (lst)
+             ;; Split list into two halves by alternating elements
+             ;; Returns (first-half second-half)
+             (if (or (not lst) (not (cdr lst)))
+                 (list lst nil)
+                 (let ((rest-split (split-list (cdr (cdr lst)))))
+                   (list (cons (car lst) (car rest-split))
+                         (cons (second lst) (second rest-split))))))
+           (merge-lists (left right)
+             ;; Merge two sorted lists using the predicate
+             (cond
+               ((not left) right)
+               ((not right) left)
+               ((funcall predicate (car left) (car right))
+                (cons (car left) (merge-lists (cdr left) right)))
+               (t
+                (cons (car right) (merge-lists left (cdr right)))))))
+    ;; Main merge-sort logic
+    (cond
+      ((not list) nil)
+      ((not (cdr list)) list)
+      (t (let* ((halves (split-list list))
+                (left-half (car halves))
+                (right-half (second halves))
+                (sorted-left (merge-sort left-half predicate))
+                (sorted-right (merge-sort right-half predicate)))
+           (merge-lists sorted-left sorted-right))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; END OF PROJECT
