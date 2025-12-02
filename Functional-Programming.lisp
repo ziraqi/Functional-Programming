@@ -51,25 +51,36 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PERSON 2: ADVANCED SET OPERATIONS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Return the intersection of set-1 and set-2.
+;; The result should contain no duplicates.
+;; Assume set-1 contains no duplicates and set-2 contains no duplicates.
+;;
+;; HINT: Iterate through set-1, keep only elements that are also in set-2
+;;       Use set-member to check if element exists in set-2
+;;
+;; Examples:
+;;   (set-intersection '(1 2) '(2 4)) => '(2)
 (defun set-intersection (set-1 set-2)
-  (cond
-    ((null set-1) nil)
+  ;; TODO: Implement intersection
+  ;; Base case: empty set-1 returns NIL
+  ;; Recursive: if (set-member set-2 (car set-1)), include it
+  )
 
-    ((set-member set-2 (car set-1))
-     (cons (car set-1)
-           (set-intersection (cdr set-1) set-2)))
-
-    (t (set-intersection (cdr set-1) set-2))))
-
+;; Return the difference of set-1 and set-2.
+;; The result should contain no duplicates.
+;; Assume set-1 contains no duplicates and set-2 contains no duplicates.
+;;
+;; HINT: Keep elements from set-1 that are NOT in set-2
+;;       Similar to intersection but with opposite logic
+;;
+;; Examples:
+;;   (set-diff '(1 2) '(2 4)) => '(1)
 (defun set-diff (set-1 set-2)
-  (cond
-    ((null set-1) nil)
-
-    ((not (set-member set-2 (car set-1)))
-     (cons (car set-1)
-           (set-diff (cdr set-1) set-2)))
-
-    (t (set-diff (cdr set-1) set-2))))
+  ;; TODO: Implement set difference
+  ;; Base case: empty set-1 returns NIL
+  ;; Recursive: if NOT (set-member set-2 (car set-1)), include it
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PERSON 3: BOOLEAN LOGIC OPERATORS
