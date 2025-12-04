@@ -20,34 +20,28 @@
 ;; Return NIL if item is not a member of set.
 ;; The type of set is list.
 ;;
-;; HINT: Use recursion. Base case: empty list returns NIL
-;;       Recursive case: check if item equals (car set), 
-;;       otherwise recurse on (cdr set)
-;;
 ;; Examples:
 ;;   (set-member '(1 2) 1) => T
 ;;   (set-member '(1 2) 3) => NIL
 (defun set-member (set item)
-  ;; TODO: Implement recursive membership check
-  ;; Base case: (if (not set) nil ...)
-  ;; Recursive: check (equal (car set) item) or recurse
-  )
+  (cond
+    ((not set) nil)                           ; Base case: empty set returns NIL
+    ((equal (car set) item) t)                ; Found it! Return T
+    (t (set-member (cdr set) item))))         ; Keep searching in rest of list
 
 ;; Return the union of set-1 and set-2.
 ;; The result should contain no duplicates.
 ;; Assume set-1 contains no duplicates and set-2 contains no duplicates.
 ;;
-;; HINT: Start with set-1, then add elements from set-2 that aren't 
-;;       already in set-1. Use set-member to check membership.
-;;
 ;; Examples:
 ;;   (set-union '(1 2) '(2 4)) => '(1 2 4)
 (defun set-union (set-1 set-2)
-  ;; TODO: Implement union
-  ;; Consider using a helper function with recursion
-  ;; For each element in set-2, check if it's in set-1
-  )
-
+  (cond
+    ((not set-2) set-1)                       ; Base case: no more elements in set-2
+    ((set-member set-1 (car set-2))           ; If first element of set-2 is already in set-1
+     (set-union set-1 (cdr set-2)))           ; Skip it, continue with rest of set-2
+    (t (set-union (cons (car set-2) set-1)    ; Add first element of set-2 to set-1
+                  (cdr set-2)))))             ; Continue with rest of set-2
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PERSON 2: ADVANCED SET OPERATIONS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
