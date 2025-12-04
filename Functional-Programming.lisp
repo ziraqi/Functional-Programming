@@ -51,36 +51,25 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PERSON 2: ADVANCED SET OPERATIONS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Return the intersection of set-1 and set-2.
-;; The result should contain no duplicates.
-;; Assume set-1 contains no duplicates and set-2 contains no duplicates.
-;;
-;; HINT: Iterate through set-1, keep only elements that are also in set-2
-;;       Use set-member to check if element exists in set-2
-;;
-;; Examples:
-;;   (set-intersection '(1 2) '(2 4)) => '(2)
 (defun set-intersection (set-1 set-2)
-  ;; TODO: Implement intersection
-  ;; Base case: empty set-1 returns NIL
-  ;; Recursive: if (set-member set-2 (car set-1)), include it
-  )
+  (cond
+    ((null set-1) nil)
 
-;; Return the difference of set-1 and set-2.
-;; The result should contain no duplicates.
-;; Assume set-1 contains no duplicates and set-2 contains no duplicates.
-;;
-;; HINT: Keep elements from set-1 that are NOT in set-2
-;;       Similar to intersection but with opposite logic
-;;
-;; Examples:
-;;   (set-diff '(1 2) '(2 4)) => '(1)
+    ((set-member set-2 (car set-1))
+     (cons (car set-1)
+           (set-intersection (cdr set-1) set-2)))
+
+    (t (set-intersection (cdr set-1) set-2))))
+
 (defun set-diff (set-1 set-2)
-  ;; TODO: Implement set difference
-  ;; Base case: empty set-1 returns NIL
-  ;; Recursive: if NOT (set-member set-2 (car set-1)), include it
-  )
+  (cond
+    ((null set-1) nil)
+
+    ((not (set-member set-2 (car set-1)))
+     (cons (car set-1)
+           (set-diff (cdr set-1) set-2)))
+
+    (t (set-diff (cdr set-1) set-2))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PERSON 3: BOOLEAN LOGIC OPERATORS
@@ -89,7 +78,7 @@
 ;; Return the exclusive or of a and b
 ;;
 ;; HINT: XOR is true when inputs differ
-;;       Truth table: T XOR NIL = T, NIL XOR T = T, 
+;;       Truth table: T XOR NIL = T, NIL XOR T = T,
 ;;                    T XOR T = NIL, NIL XOR NIL = NIL
 ;;       Can use: (and (or a b) (not (and a b)))
 ;;       Or: (not (equal a b))
@@ -98,8 +87,7 @@
 ;;   (boolean-xor t nil) => T
 ;;   (boolean-xor nil nil) => NIL
 (defun boolean-xor (a b)
-  ;; TODO: Implement XOR
-  )
+  (not (equal a b)))
 
 ;; Return the implication of a and b
 ;;
@@ -111,9 +99,7 @@
 ;;   (boolean-implies t nil) => NIL
 ;;   (boolean-implies nil nil) => T
 (defun boolean-implies (a b)
-  ;; TODO: Implement implication
-  ;; Use: (or (not a) b)
-  )
+  (or (not a) b))
 
 ;; Return the bi-implication (if and only if) of a and b
 ;;
@@ -125,10 +111,7 @@
 ;;   (boolean-iff t nil) => NIL
 ;;   (boolean-iff nil nil) => T
 (defun boolean-iff (a b)
-  ;; TODO: Implement bi-implication
-  ;; Either use (and (boolean-implies a b) (boolean-implies b a))
-  ;; Or: (equal a b)
-  )
+  (equal a b))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PERSON 4: COMPLEX FUNCTIONS
@@ -151,12 +134,32 @@
 ;;   (boolean-eval '(and t nil)) => NIL
 ;;   (boolean-eval '(and t (or nil t))) => T
 (defun boolean-eval (exp)
-  ;; TODO: Implement expression evaluator
+  ;; Evaluate a boolean expression recursively
   ;; Base cases: T and NIL evaluate to themselves
   ;; Recursive cases: extract operator and operands, evaluate recursively
-  ;; For NOT: one operand
-  ;; For AND, OR, XOR, IMPLIES, IFF: two operands
-  )
+  (cond
+    ;; Base case: T evaluates to T
+    ((equal exp t) t)
+    ;; Base case: NIL evaluates to NIL
+    ((equal exp nil) nil)
+    ;; NOT operator: recursively evaluate the operand and apply NOT
+    ((equal (car exp) 'not)
+     (not (boolean-eval (second exp))))
+    ;; AND operator: recursively evaluate both operands and apply AND
+    ((equal (car exp) 'and)
+     (and (boolean-eval (second exp)) (boolean-eval (third exp))))
+    ;; OR operator: recursively evaluate both operands and apply OR
+    ((equal (car exp) 'or)
+     (or (boolean-eval (second exp)) (boolean-eval (third exp))))
+    ;; XOR operator: recursively evaluate both operands and apply XOR
+    ((equal (car exp) 'xor)
+     (boolean-xor (boolean-eval (second exp)) (boolean-eval (third exp))))
+    ;; IMPLIES operator: recursively evaluate both operands and apply IMPLIES
+    ((equal (car exp) 'implies)
+     (boolean-implies (boolean-eval (second exp)) (boolean-eval (third exp))))
+    ;; IFF operator: recursively evaluate both operands and apply IFF
+    ((equal (car exp) 'iff)
+     (boolean-iff (boolean-eval (second exp)) (boolean-eval (third exp))))))
 
 ;; Perform merge sort on a list.
 ;; Parameters:
@@ -176,24 +179,34 @@
 ;;   (merge-sort '(2 1 5 0) #'<) => '(0 1 2 5)
 ;;   (merge-sort '(2 1 5 0) #'>) => '(5 2 1 0)
 (defun merge-sort (list predicate)
-  ;; TODO: Implement merge sort
-  ;; Use LABELS to define:
-  ;;   (split-list lst) - returns two lists
-  ;;   (merge-lists left right) - merges two sorted lists
-  ;; 
-  ;; Structure:
-  ;; (labels ((split-list (lst) ...)
-  ;;          (merge-lists (left right) ...))
-  ;;   (cond
-  ;;     ((not list) nil)
-  ;;     ((not (cdr list)) list)
-  ;;     (t (let* ((halves (split-list list))
-  ;;               (left-half (car halves))
-  ;;               (right-half (second halves))
-  ;;               (sorted-left (merge-sort left-half predicate))
-  ;;               (sorted-right (merge-sort right-half predicate)))
-  ;;          (merge-lists sorted-left sorted-right)))))
-  )
+  ;; Merge sort implementation using divide-and-conquer
+  (labels ((split-list (lst)
+             ;; Split list into two halves by alternating elements
+             ;; Returns (first-half second-half)
+             (if (or (not lst) (not (cdr lst)))
+                 (list lst nil)
+                 (let ((rest-split (split-list (cdr (cdr lst)))))
+                   (list (cons (car lst) (car rest-split))
+                         (cons (second lst) (second rest-split))))))
+           (merge-lists (left right)
+             ;; Merge two sorted lists using the predicate
+             (cond
+               ((not left) right)
+               ((not right) left)
+               ((funcall predicate (car left) (car right))
+                (cons (car left) (merge-lists (cdr left) right)))
+               (t
+                (cons (car right) (merge-lists left (cdr right)))))))
+    ;; Main merge-sort logic
+    (cond
+      ((not list) nil)
+      ((not (cdr list)) list)
+      (t (let* ((halves (split-list list))
+                (left-half (car halves))
+                (right-half (second halves))
+                (sorted-left (merge-sort left-half predicate))
+                (sorted-right (merge-sort right-half predicate)))
+           (merge-lists sorted-left sorted-right))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; END OF PROJECT
