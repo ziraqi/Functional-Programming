@@ -78,7 +78,7 @@
 ;; Return the exclusive or of a and b
 ;;
 ;; HINT: XOR is true when inputs differ
-;;       Truth table: T XOR NIL = T, NIL XOR T = T, 
+;;       Truth table: T XOR NIL = T, NIL XOR T = T,
 ;;                    T XOR T = NIL, NIL XOR NIL = NIL
 ;;       Can use: (and (or a b) (not (and a b)))
 ;;       Or: (not (equal a b))
@@ -87,8 +87,7 @@
 ;;   (boolean-xor t nil) => T
 ;;   (boolean-xor nil nil) => NIL
 (defun boolean-xor (a b)
-  ;; TODO: Implement XOR
-  )
+  (not (equal a b)))
 
 ;; Return the implication of a and b
 ;;
@@ -100,9 +99,7 @@
 ;;   (boolean-implies t nil) => NIL
 ;;   (boolean-implies nil nil) => T
 (defun boolean-implies (a b)
-  ;; TODO: Implement implication
-  ;; Use: (or (not a) b)
-  )
+  (or (not a) b))
 
 ;; Return the bi-implication (if and only if) of a and b
 ;;
@@ -114,10 +111,7 @@
 ;;   (boolean-iff t nil) => NIL
 ;;   (boolean-iff nil nil) => T
 (defun boolean-iff (a b)
-  ;; TODO: Implement bi-implication
-  ;; Either use (and (boolean-implies a b) (boolean-implies b a))
-  ;; Or: (equal a b)
-  )
+  (equal a b))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PERSON 4: COMPLEX FUNCTIONS
